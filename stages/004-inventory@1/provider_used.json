@@ -1,0 +1,6 @@
+{
+  "mode": "agent",
+  "provider": "openrouter",
+  "model": "kimi-k3",
+  "reasoning_effort": "low"
+}
