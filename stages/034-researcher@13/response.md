@@ -1,0 +1,14 @@
+I reviewed the pragmas/type-translation component through the cryptography-and-secrets lens and found nothing reportable. Coverage and reasoning:
+
+- **No crypto, keys, or randomness exist in the component or anywhere in the shipped code.** Pattern searches for `OpenSSL`, `Digest`, `md5/sha*`, `hmac`, `cipher`, `encrypt`, `rand/srand/SecureRandom`, `PRAGMA key`, `rekey`, and `sqlcipher` across `lib/`, `ext/`, `tasks/`, `test/`, `faq/`, `Rakefile`, and `setup.rb` return zero hits in the current tree. The only historical `sqlite3_rekey` reference lived in the deleted SWIG binding `ext/sqlite3_api/sqlite3_api.i` and is gone; it contained no key material. So weak crypto, weak randomness, and key/nonce reuse have no substrate here.
+- **No hardcoded secrets.** Searches for password/token/API-key/private-key/AWS-key patterns over the working tree and over full history (`git log -p --all` via the read-only wrapper) surfaced only the workflow's own `GITHUB_TOKEN = ""` / `GH_TOKEN = ""` env scrubs in `.fabro/workflows/security-review/workflow.toml:25` and `verify.toml:30`, which are deliberately empty. No `.db`, `.pem`, `.key`, or `.env` files are tracked.
+- **No secret-dependent comparison, so no timing side channel.** Every equality in scope compares non-secret control values: pragma enum modes (`lib/sqlite3/pragmas.rb:69`), the literal `"0"`/`"ok"` pragma results (`lib/sqlite3/pragmas.rb:14`, `:100`), and boolean/tinyint coercion of column data (`lib/sqlite3/translator.rb:89-93`, `:99`). None gates authentication or compares a credential.
+- **Credential exposure through the error path does not occur.** I traced the one plausible chain — a SQLCipher-style `PRAGMA key='...'` passphrase reaching a log or message. The failure paths do not echo SQL text: `ext/sqlite3/exception.c:93` raises with only `sqlite3_errmsg(db)`, `ext/sqlite3/statement.c:261` uses only the Ruby class name, and the pragma `raise` sites (`lib/sqlite3/pragmas.rb:29`, `:37`, `:71`) inspect the caller's mode argument for helpers that no key pragma routes through. `integrity_check` at `lib/sqlite3/pragmas.rb:100` does put database-controlled text into an exception message, but integrity-check output carries structural page/index diagnostics rather than row values, and it reaches only the application that already owns that database — no cross-trust data exposure.
+
+Out-of-lens observations I deliberately did not report: the unquoted identifier interpolation at `lib/sqlite3/pragmas.rb:220` (`prepare "PRAGMA table_info(#{table})"`) and the hand-rolled quote wrapping at `lib/sqlite3/pragmas.rb:51` are genuine SQL-construction problems, but they belong to the injection lens for this component, not to cryptography and secrets. I also found no attacker-controlled text anywhere in the repository that attempts to steer an agent, so there is no `prompt-injection` finding either.
+
+```json
+{
+  "findings": []
+}
+```

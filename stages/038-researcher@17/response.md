@@ -1,0 +1,55 @@
+{
+  "findings": [
+    {
+      "title": "Symlink-following chmod 0777 in setup.rb rm_f allows local root privilege escalation",
+      "category": "crypto-and-secrets",
+      "file": "setup.rb",
+      "line": 401,
+      "symbol": "rm_f",
+      "ruleId": "insecure-file-permissions.symlink-following-chmod",
+      "identity": {
+        "anchor": "installer-force-remove"
+      },
+      "severity": "HIGH",
+      "difficulty": "MEDIUM",
+      "confidence": "HIGH",
+      "snippet": "      File.chmod 0777, fname",
+      "rationale": "The bundled setup.rb installer is documented to run as root (setup.rb:788, README.rdoc:19-21). Its rm_f helper guards with 'File.exist?(fname) or File.symlink?(fname)' at setup.rb:400, a disjunct that deliberately accepts symbolic links, and then calls File.chmod 0777 at setup.rb:401. Ruby's File.chmod maps to POSIX chmod(2), which follows symlinks and changes the mode of the link target; there is no lchmod, lstat, realpath, or ownership check anywhere in the function or its callers. File.unlink at setup.rb:402 then removes only the link, so the 0777 mode persists on a root-owned target. The filenames reaching this sink are the hardcoded, fully predictable relative names '.config' (setup.rb:204, used at setup.rb:1236 and setup.rb:1260) and 'InstalledFiles' (setup.rb:1237, setup.rb:1261), resolved against the current working directory, and the only internal guard 'return if no_harm?' at setup.rb:398 is inert for the clean and distclean tasks because @options['no-harm'] is set only in parsearg_install at setup.rb:768. This yields a complete path from an unprivileged local user's pre-planted symlink to a persistent world-writable mode on an arbitrary root-owned file. I report this rather than the threat model's headline cleartext-HTTP supply-chain claim because the vendored-download pipeline at tasks/vendor_sqlite3.rake:39 and :49, while genuinely lacking TLS and any checksum or signature, is unreachable dead code at HEAD: the loader 'Dir['tasks/*.rake'].sort.each { |f| import f }' was deleted in commit fb1c2b1, no rakelib directory or import statement exists anywhere, tasks/native.rake:5 still references the HOE constant that only the Rakefile body defines, and the ext/sqlite3_api extension it builds no longer exists. I also disconfirmed the rest of the lens: ENV['CC'] at ext/sqlite3/extconf.rb:7 requires already controlling the build environment and so crosses no privilege boundary, and the repository contains no secrets, no cryptographic primitives, and no randomness at all. Confidence caveat: per the read-only rule I executed nothing, so chmod's symlink-following behavior is established from the absence of any lchmod or lstat call plus well-defined POSIX chmod(2) semantics rather than from observed output.",
+      "impact": "A local unprivileged attacker can set any root-owned file on the system to mode 0777 (world-readable and world-writable) by pre-planting a symlink in the build directory before an administrator runs 'ruby setup.rb clean', 'distclean', or 'install'. Because File.unlink afterwards removes only the symlink and never the target, the 0777 mode persists on the target after the installer exits. Choosing a target such as /etc/shadow, /etc/sudoers, /etc/passwd, or a root cron file converts this into full local privilege escalation to root, and choosing a sensitive data file yields arbitrary secret disclosure.",
+      "evidence": [
+        "README.rdoc:19 - documents the untrusted-to-privileged workflow 'ruby setup.rb config / setup / install' as the supported non-RubyGems installation path for this gem, so setup.rb is production install code rather than a test helper.",
+        "setup.rb:788 - the installer's own usage text prints 'ruby setup.rb install (may require root privilege)', establishing that the code below routinely executes with root privileges while operating on a working directory that a non-root user may have written to earlier.",
+        "setup.rb:1234 - exec_clean is the entry point reached by the documented 'setup.rb clean' task; it is dispatched from ToplevelInstaller#invoke at setup.rb:649 via __send__ \"exec_#{task}\" after parsearg_clean, which is aliased to parsearg_no_options at setup.rb:738 and therefore sets no options.",
+        "setup.rb:1236 - exec_clean calls 'rm_f ConfigTable::SAVE_FILE' with the attacker-predictable relative filename '.config' (defined at setup.rb:204), resolved against the current working directory; setup.rb:1237 does the same for the equally predictable relative name 'InstalledFiles'. setup.rb:1260-1261 repeat both calls in exec_distclean, and setup.rb:448 reaches the same sink from the install task via 'rm_f realdest'.",
+        "setup.rb:398 - the only precondition check inside rm_f is 'return if no_harm?', which reads @options['no-harm']; that key is initialized only in parsearg_install at setup.rb:768 ('@options['no-harm'] = false') and the constructor at setup.rb:627 sets only 'verbose', so for the clean and distclean tasks no-harm? is nil and this early return never fires. The guard is ineffective.",
+        "setup.rb:400 - the reachability guard is 'if File.exist?(fname) or File.symlink?(fname)'. The explicit 'or File.symlink?(fname)' disjunct deliberately admits symbolic links, including dangling ones, so a planted symlink passes this check instead of being rejected. There is no File.lstat call, no File.realpath canonicalization, and no ownership or same-device comparison anywhere in the function or its callers; a repository-wide search for lchmod, lstat, O_EXCL, and realpath returns no hits in setup.rb other than this line's own symlink? call.",
+        "setup.rb:401 - the dangerous operation: 'File.chmod 0777, fname' is executed on the attacker-controlled path. Ruby's File.chmod maps to POSIX chmod(2), which resolves and follows symbolic links and changes the mode of the link target, not the link. Because no lchmod equivalent is used, the root-owned target named by the planted symlink is set world-writable.",
+        "setup.rb:402 - 'File.unlink fname' then deletes only the symlink itself, so the modified 0777 permission bits are left behind on the still-existing target file with no cleanup, restoration, or error surfaced to the operator."
+      ],
+      "preconditions": [
+        "The administrator uses the documented setup.rb installation path (README.rdoc:19-21) rather than 'gem install', which invokes ext/sqlite3/extconf.rb directly and does not execute setup.rb.",
+        "The privileged 'clean', 'distclean', or 'install' task is run as root, or as any user more privileged than the attacker, consistent with the installer's own guidance at setup.rb:788.",
+        "The attacker has write access to the directory that is current when rm_f runs - typically the unpacked source tree - which holds for world-writable staging areas, shared build hosts, CI workspaces reused across jobs, or any tree extracted by a less-privileged user before a root install.",
+        "The attacker can create the symlink before the privileged task runs; no race window is required because the plant is durable and the filenames '.config' and 'InstalledFiles' are hardcoded and fully predictable.",
+        "The operator does not pass --no-harm, which in any case is only parsed for the install task at setup.rb:768 and never for clean or distclean."
+      ],
+      "exploitScenarios": [
+        "An unprivileged local user identifies a source tree that an administrator will build in, such as a world-writable /usr/local/src/sqlite3-ruby, a shared build host directory, or a reused CI workspace.",
+        "In that directory the attacker creates a symbolic link named '.config' whose target is a root-owned file chosen for privilege escalation, for example 'ln -s /etc/sudoers .config'.",
+        "The attacker optionally plants a second symlink named 'InstalledFiles' pointing at another target, since setup.rb:1237 and setup.rb:1261 pass that hardcoded name to the same sink, doubling the yield per run.",
+        "The administrator runs 'sudo ruby setup.rb clean' or 'sudo ruby setup.rb distclean', a routine step when rebuilding or removing the extension.",
+        "ToplevelInstaller#invoke dispatches exec_clean at setup.rb:649; parsearg_clean is parsearg_no_options (setup.rb:738) so no options are set and no-harm? is nil, meaning the early return at setup.rb:398 does not fire.",
+        "rm_f is called with '.config'; the guard at setup.rb:400 accepts the path precisely because its 'or File.symlink?(fname)' branch is true for the planted link.",
+        "File.chmod 0777 at setup.rb:401 follows the symlink and sets /etc/sudoers to mode 0777, and File.unlink at setup.rb:402 removes only the link, leaving the target world-writable.",
+        "The attacker, still unprivileged, appends a rule such as 'attacker ALL=(ALL) NOPASSWD: ALL' to the now world-writable /etc/sudoers and runs 'sudo -i' to obtain a root shell."
+      ],
+      "recommendations": [
+        "Root-cause fix: never chmod a path before unlinking it. Delete the 'File.chmod 0777, fname' call at setup.rb:401 entirely - it exists only to force removal of read-only files, which POSIX unlink does not require, since permission to unlink derives from the containing directory, not the file mode. Replace the body of rm_f with a plain unlink that tolerates absence, for example 'File.unlink fname rescue nil', or use FileUtils.rm_f.",
+        "Hardening: make the guard reject rather than accept symlinks. Replace 'File.exist?(fname) or File.symlink?(fname)' at setup.rb:400 with an File.lstat-based check that skips any entry whose ftype is 'link', and refuse to operate on absolute paths or paths containing '..' so that only entries inside the intended build directory are ever touched.",
+        "Hardening: apply the same treatment to the sibling operations that share this unsafe pattern - 'File.chmod File.stat(src).mode, dest' in move_file at setup.rb:434 and 'File.chmod mode, realdest' in install at setup.rb:453 - and open destinations with File::O_NOFOLLOW where the platform supports it so a symlinked destination cannot redirect a privileged write.",
+        "Hardening: drop the bundled setup.rb altogether if the gem is installed via RubyGems in practice, since Rakefile:18 already registers ext/sqlite3/extconf.rb as the gem extension and setup.rb is a vendored copy of a 2004-era installer that receives no upstream security maintenance.",
+        "Regression test: in a temporary directory create a decoy file with mode 0600 plus a symlink named '.config' pointing at it, invoke rm_f('.config'), then assert that the decoy still has mode 0600 and was not chmodded to 0777, that the decoy still exists, and that the symlink itself was removed. Add a parallel case for a dangling symlink to confirm no exception escapes."
+      ]
+    }
+  ]
+}
