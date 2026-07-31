@@ -2152,7 +2152,7 @@
     "kind": "running"
   },
   "status_updated_at": "2026-07-31T18:03:28.089106720Z",
-  "last_event_at": "2026-07-31T18:05:26.114979796Z",
+  "last_event_at": "2026-07-31T18:05:32.149889940Z",
   "pending_control": null,
   "checkpoints": [
     {
@@ -2449,9 +2449,9 @@
       }
     },
     {
-      "seq": 0,
+      "seq": 95,
       "checkpoint": {
-        "timestamp": "2026-07-31T18:05:26.724108815Z",
+        "timestamp": "2026-07-31T18:05:30.788590176Z",
         "current_node": "inventory",
         "completed_nodes": [
           "start",
@@ -2461,12 +2461,375 @@
         ],
         "node_retries": {},
         "context_values": {
+          "graph.rankdir": "LR",
+          "last_response": "{\n  \"components\": [\n    {\n      \"name\": \"c-extension\",\n      \"paths\": [\"ext/sqlite3\"],\n      \"language\": \"C\",\n      \"role\": \"Native Ruby/C extension binding SQLite3: database open/close, SQL prepare/s",
+          "outcome": "succeeded",
+          "failure_signature": "",
           "products_dir": "SECURITY-REVIEW-20260731-180332",
+          "thread.start.current_node": "prepare",
+          "empty_target": false,
+          "mode": "scan",
+          "thread.prepare.current_node": "target_gate",
+          "internal.retry_count.prepare": 0,
+          "last_stage": "inventory",
+          "current_node": "inventory",
+          "internal.node_visit_count": 1,
+          "graph.stall_timeout": "14400000ms",
           "thread.inventory.current_node": "inventory",
+          "internal.work_dir": "/home/daytona/workspace/sqlite3-ruby",
+          "internal.thread_id": "inventory",
+          "effort": "medium",
+          "graph.default_fidelity": "compact",
+          "use_inventory": true,
+          "response.inventory": "{\n  \"components\": [\n    {\n      \"name\": \"c-extension\",\n      \"paths\": [\"ext/sqlite3\"],\n      \"language\": \"C\",\n      \"role\": \"Native Ruby/C extension binding SQLite3: database open/close, SQL prepare/step, BLOB and value marshalling, authorizer/busy/progress callbacks into Ruby, plus extconf.rb build configuration\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"ruby-api\",\n      \"paths\": [\"lib/sqlite3.rb\", \"lib/sqlite3\"],\n      \"language\": \"Ruby\",\n      \"role\": \"High-level Ruby API: database/statement wrappers, SQL quoting and construction, pragmas, type translation, result sets\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"install-script\",\n      \"paths\": [\"setup.rb\"],\n      \"language\": \"Ruby\",\n      \"role\": \"Legacy standalone installer executed with user privileges at package install time (config/setup/install file operations)\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"build-tasks\",\n      \"paths\": [\"Rakefile\", \"tasks\"],\n      \"language\": \"Ruby\",\n      \"role\": \"Rake build/release automation, including vendor_sqlite3.rake which downloads and extracts SQLite3 binaries over plain HTTP (supply-chain surface)\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"faq-generator\",\n      \"paths\": [\"faq\"],\n      \"language\": \"Ruby\",\n      \"role\": \"Developer documentation tool parsing faq.yml via YAML and RedCloth to emit HTML\",\n      \"internetFacing\": false\n    }\n  ],\n  \"securityScanSkippedComponents\": [\n    {\n      \"name\": \"test-suite\",\n      \"paths\": [\"test\"],\n      \"reason\": \"Unit/integration test suite; not shipped with the gem and not executed in production\"\n    },\n    {\n      \"name\": \"review-workflow-scaffolding\",\n      \"paths\": [\".fabro\"],\n      \"reason\": \"Agent security-review workflow configuration, prompts, schemas, and scripts; review tooling, not product code\"\n    },\n    {\n      \"name\": \"review-run-output\",\n      \"paths\": [\"SECURITY-REVIEW-20260731-180332\"],\n      \"reason\": \"Generated state and report output of this review run\"\n    },\n    {\n      \"name\": \"root-docs-and-metadata\",\n      \"paths\": [\"README.rdoc\", \"CHANGELOG.rdoc\", \"API_CHANGES.rdoc\", \"ChangeLog.cvs\", \"LICENSE\", \"Manifest.txt\", \".gitignore\"],\n      \"reason\": \"Non-executable documentation and packaging metadata\"\n    },\n    {\n      \"name\": \"vcs-internals\",\n      \"paths\": [\".git\"],\n      \"reason\": \"Git object store and refs; VCS internals, not product code\"\n    }\n  ]\n}",
+          "internal.retry_count.target_gate": 0,
+          "failure_class": "",
+          "graph.default_max_retries": "0",
+          "graph.model_stylesheet": "\n            * { model: kimi-k3; reasoning_effort: low; }\n            .inventory { model: kimi-k3; reasoning_effort: low; }\n            .threat-model { model: kimi-k3; reasoning_effort: low; }\n            .research { model: kimi-k3; reasoning_effort: high; }\n            .verification { model: kimi-k3; reasoning_effort: high; }\n        ",
+          "output.inventory": {
+            "components": [
+              {
+                "name": "c-extension",
+                "paths": [
+                  "ext/sqlite3"
+                ],
+                "language": "C",
+                "role": "Native Ruby/C extension binding SQLite3: database open/close, SQL prepare/step, BLOB and value marshalling, authorizer/busy/progress callbacks into Ruby, plus extconf.rb build configuration",
+                "internetFacing": false
+              },
+              {
+                "name": "ruby-api",
+                "paths": [
+                  "lib/sqlite3.rb",
+                  "lib/sqlite3"
+                ],
+                "language": "Ruby",
+                "role": "High-level Ruby API: database/statement wrappers, SQL quoting and construction, pragmas, type translation, result sets",
+                "internetFacing": false
+              },
+              {
+                "name": "install-script",
+                "paths": [
+                  "setup.rb"
+                ],
+                "language": "Ruby",
+                "role": "Legacy standalone installer executed with user privileges at package install time (config/setup/install file operations)",
+                "internetFacing": false
+              },
+              {
+                "name": "build-tasks",
+                "paths": [
+                  "Rakefile",
+                  "tasks"
+                ],
+                "language": "Ruby",
+                "role": "Rake build/release automation, including vendor_sqlite3.rake which downloads and extracts SQLite3 binaries over plain HTTP (supply-chain surface)",
+                "internetFacing": false
+              },
+              {
+                "name": "faq-generator",
+                "paths": [
+                  "faq"
+                ],
+                "language": "Ruby",
+                "role": "Developer documentation tool parsing faq.yml via YAML and RedCloth to emit HTML",
+                "internetFacing": false
+              }
+            ],
+            "securityScanSkippedComponents": [
+              {
+                "name": "test-suite",
+                "paths": [
+                  "test"
+                ],
+                "reason": "Unit/integration test suite; not shipped with the gem and not executed in production"
+              },
+              {
+                "name": "review-workflow-scaffolding",
+                "paths": [
+                  ".fabro"
+                ],
+                "reason": "Agent security-review workflow configuration, prompts, schemas, and scripts; review tooling, not product code"
+              },
+              {
+                "name": "review-run-output",
+                "paths": [
+                  "SECURITY-REVIEW-20260731-180332"
+                ],
+                "reason": "Generated state and report output of this review run"
+              },
+              {
+                "name": "root-docs-and-metadata",
+                "paths": [
+                  "README.rdoc",
+                  "CHANGELOG.rdoc",
+                  "API_CHANGES.rdoc",
+                  "ChangeLog.cvs",
+                  "LICENSE",
+                  "Manifest.txt",
+                  ".gitignore"
+                ],
+                "reason": "Non-executable documentation and packaging metadata"
+              },
+              {
+                "name": "vcs-internals",
+                "paths": [
+                  ".git"
+                ],
+                "reason": "Git object store and refs; VCS internals, not product code"
+              }
+            ]
+          },
+          "internal.retry_count.inventory": 0,
+          "graph.goal": "Perform an adversarial, read-only security review of this repository and report only panel-verified findings.",
+          "internal.fidelity": "compact",
+          "internal.retry_count.start": 0,
+          "command.output": "blob://sha256/03f0d6f1d92cb8102d7e8bdaba56ef6d5ce5e488fe6e1866578f27ae3abc5828",
+          "internal.run_id": "01KYWNGSD693EHMZF16S3H25CQ",
+          "inventory_assignment": {
+            "scanRoot": "/home/daytona/repos/brynary/sqlite3-ruby",
+            "target": {
+              "mode": "scan",
+              "scope": [],
+              "range": null,
+              "changedFileCount": null,
+              "changedLineCount": null,
+              "focus": null,
+              "scanRoot": "/home/daytona/repos/brynary/sqlite3-ruby",
+              "gitWrapper": "python3 .fabro/workflows/security-review/scripts/git_readonly.py"
+            },
+            "maxComponents": 12,
+            "topLevelDirectories": [
+              ".fabro",
+              "ext",
+              "faq",
+              "lib",
+              "tasks",
+              "test"
+            ],
+            "wholeTreeCompletenessRequired": true
+          }
+        },
+        "node_outcomes": {
+          "start": {
+            "status": "succeeded",
+            "usage": null
+          },
+          "inventory": {
+            "status": "succeeded",
+            "context_updates": {
+              "last_response": "{\n  \"components\": [\n    {\n      \"name\": \"c-extension\",\n      \"paths\": [\"ext/sqlite3\"],\n      \"language\": \"C\",\n      \"role\": \"Native Ruby/C extension binding SQLite3: database open/close, SQL prepare/s",
+              "last_stage": "inventory",
+              "output.inventory": {
+                "components": [
+                  {
+                    "name": "c-extension",
+                    "paths": [
+                      "ext/sqlite3"
+                    ],
+                    "language": "C",
+                    "role": "Native Ruby/C extension binding SQLite3: database open/close, SQL prepare/step, BLOB and value marshalling, authorizer/busy/progress callbacks into Ruby, plus extconf.rb build configuration",
+                    "internetFacing": false
+                  },
+                  {
+                    "name": "ruby-api",
+                    "paths": [
+                      "lib/sqlite3.rb",
+                      "lib/sqlite3"
+                    ],
+                    "language": "Ruby",
+                    "role": "High-level Ruby API: database/statement wrappers, SQL quoting and construction, pragmas, type translation, result sets",
+                    "internetFacing": false
+                  },
+                  {
+                    "name": "install-script",
+                    "paths": [
+                      "setup.rb"
+                    ],
+                    "language": "Ruby",
+                    "role": "Legacy standalone installer executed with user privileges at package install time (config/setup/install file operations)",
+                    "internetFacing": false
+                  },
+                  {
+                    "name": "build-tasks",
+                    "paths": [
+                      "Rakefile",
+                      "tasks"
+                    ],
+                    "language": "Ruby",
+                    "role": "Rake build/release automation, including vendor_sqlite3.rake which downloads and extracts SQLite3 binaries over plain HTTP (supply-chain surface)",
+                    "internetFacing": false
+                  },
+                  {
+                    "name": "faq-generator",
+                    "paths": [
+                      "faq"
+                    ],
+                    "language": "Ruby",
+                    "role": "Developer documentation tool parsing faq.yml via YAML and RedCloth to emit HTML",
+                    "internetFacing": false
+                  }
+                ],
+                "securityScanSkippedComponents": [
+                  {
+                    "name": "test-suite",
+                    "paths": [
+                      "test"
+                    ],
+                    "reason": "Unit/integration test suite; not shipped with the gem and not executed in production"
+                  },
+                  {
+                    "name": "review-workflow-scaffolding",
+                    "paths": [
+                      ".fabro"
+                    ],
+                    "reason": "Agent security-review workflow configuration, prompts, schemas, and scripts; review tooling, not product code"
+                  },
+                  {
+                    "name": "review-run-output",
+                    "paths": [
+                      "SECURITY-REVIEW-20260731-180332"
+                    ],
+                    "reason": "Generated state and report output of this review run"
+                  },
+                  {
+                    "name": "root-docs-and-metadata",
+                    "paths": [
+                      "README.rdoc",
+                      "CHANGELOG.rdoc",
+                      "API_CHANGES.rdoc",
+                      "ChangeLog.cvs",
+                      "LICENSE",
+                      "Manifest.txt",
+                      ".gitignore"
+                    ],
+                    "reason": "Non-executable documentation and packaging metadata"
+                  },
+                  {
+                    "name": "vcs-internals",
+                    "paths": [
+                      ".git"
+                    ],
+                    "reason": "Git object store and refs; VCS internals, not product code"
+                  }
+                ]
+              },
+              "response.inventory": "{\n  \"components\": [\n    {\n      \"name\": \"c-extension\",\n      \"paths\": [\"ext/sqlite3\"],\n      \"language\": \"C\",\n      \"role\": \"Native Ruby/C extension binding SQLite3: database open/close, SQL prepare/step, BLOB and value marshalling, authorizer/busy/progress callbacks into Ruby, plus extconf.rb build configuration\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"ruby-api\",\n      \"paths\": [\"lib/sqlite3.rb\", \"lib/sqlite3\"],\n      \"language\": \"Ruby\",\n      \"role\": \"High-level Ruby API: database/statement wrappers, SQL quoting and construction, pragmas, type translation, result sets\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"install-script\",\n      \"paths\": [\"setup.rb\"],\n      \"language\": \"Ruby\",\n      \"role\": \"Legacy standalone installer executed with user privileges at package install time (config/setup/install file operations)\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"build-tasks\",\n      \"paths\": [\"Rakefile\", \"tasks\"],\n      \"language\": \"Ruby\",\n      \"role\": \"Rake build/release automation, including vendor_sqlite3.rake which downloads and extracts SQLite3 binaries over plain HTTP (supply-chain surface)\",\n      \"internetFacing\": false\n    },\n    {\n      \"name\": \"faq-generator\",\n      \"paths\": [\"faq\"],\n      \"language\": \"Ruby\",\n      \"role\": \"Developer documentation tool parsing faq.yml via YAML and RedCloth to emit HTML\",\n      \"internetFacing\": false\n    }\n  ],\n  \"securityScanSkippedComponents\": [\n    {\n      \"name\": \"test-suite\",\n      \"paths\": [\"test\"],\n      \"reason\": \"Unit/integration test suite; not shipped with the gem and not executed in production\"\n    },\n    {\n      \"name\": \"review-workflow-scaffolding\",\n      \"paths\": [\".fabro\"],\n      \"reason\": \"Agent security-review workflow configuration, prompts, schemas, and scripts; review tooling, not product code\"\n    },\n    {\n      \"name\": \"review-run-output\",\n      \"paths\": [\"SECURITY-REVIEW-20260731-180332\"],\n      \"reason\": \"Generated state and report output of this review run\"\n    },\n    {\n      \"name\": \"root-docs-and-metadata\",\n      \"paths\": [\"README.rdoc\", \"CHANGELOG.rdoc\", \"API_CHANGES.rdoc\", \"ChangeLog.cvs\", \"LICENSE\", \"Manifest.txt\", \".gitignore\"],\n      \"reason\": \"Non-executable documentation and packaging metadata\"\n    },\n    {\n      \"name\": \"vcs-internals\",\n      \"paths\": [\".git\"],\n      \"reason\": \"Git object store and refs; VCS internals, not product code\"\n    }\n  ]\n}"
+            },
+            "notes": "Stage completed: inventory",
+            "usage": {
+              "input": {
+                "usage": {
+                  "model": {
+                    "provider": "openrouter",
+                    "model_id": "kimi-k3"
+                  },
+                  "tokens": {
+                    "input_tokens": 13876,
+                    "output_tokens": 1214,
+                    "reasoning_tokens": 2142,
+                    "cache_read_tokens": 43776,
+                    "cache_write_tokens": 0
+                  }
+                },
+                "facts": {
+                  "algorithm": "openai"
+                }
+              },
+              "total_usd_micros": 105101
+            },
+            "timing": {
+              "wall_time_ms": 0,
+              "inference_time_ms": 97857,
+              "tool_time_ms": 2897,
+              "active_time_ms": 100754
+            }
+          },
+          "target_gate": {
+            "status": "succeeded",
+            "notes": "Conditional node evaluated: target_gate",
+            "usage": null
+          },
+          "prepare": {
+            "status": "succeeded",
+            "context_updates": {
+              "command.output": "blob://sha256/03f0d6f1d92cb8102d7e8bdaba56ef6d5ce5e488fe6e1866578f27ae3abc5828",
+              "empty_target": false,
+              "use_inventory": true,
+              "inventory_assignment": {
+                "scanRoot": "/home/daytona/repos/brynary/sqlite3-ruby",
+                "target": {
+                  "mode": "scan",
+                  "scope": [],
+                  "range": null,
+                  "changedFileCount": null,
+                  "changedLineCount": null,
+                  "focus": null,
+                  "scanRoot": "/home/daytona/repos/brynary/sqlite3-ruby",
+                  "gitWrapper": "python3 .fabro/workflows/security-review/scripts/git_readonly.py"
+                },
+                "maxComponents": 12,
+                "topLevelDirectories": [
+                  ".fabro",
+                  "ext",
+                  "faq",
+                  "lib",
+                  "tasks",
+                  "test"
+                ],
+                "wholeTreeCompletenessRequired": true
+              },
+              "products_dir": "SECURITY-REVIEW-20260731-180332",
+              "effort": "medium",
+              "mode": "scan"
+            },
+            "notes": "Script completed: python3 -c \"import hashlib,sys; pairs=list(zip(sys.argv[1::2],sys.argv[2::2])); sys.exit(0 if pairs and all(hashlib.sha256(open(path,'rb').read()).hexdigest()==expected for path,expected in pairs) else 91)\" .fabro/workflows/security-review/scripts/security_review.py db08c08320c2c1fb6cd3226fb70fa5672794c0cd12be7d78b82214fc7346258d .fabro/workflows/security-review/scripts/git_readonly.py 6bafe2418234d7887d9f4726208bc9e50325bf34c5098c4a6ef508f1a5486ec5 .fabro/workflows/security-review/scripts/render_report.py 6949cb65bf950b41cf1937deb9eac111a026fe11bf7aa35eb34d53dd670100c4 .fabro/workflows/security-review/specs/report-spec.md 18e3eb3de3c2f585cd4e24d3168b0aaf0176a72ba5efeadaf6773cee1c5f2be2 .fabro/workflows/security-review/templates/report.html 55583ce1e9272ccbc0c048bf8d2ba660e443ca3b77c929958ab0955ac4616777 && python3 .fabro/workflows/security-review/scripts/security_review.py prepare --scan-id-stdin --mode scan --effort medium --scope '' --base '' --commit '' --range '' --focus ''",
+            "usage": null,
+            "timing": {
+              "wall_time_ms": 0,
+              "inference_time_ms": 0,
+              "tool_time_ms": 1319,
+              "active_time_ms": 1319
+            }
+          }
+        },
+        "next_node_id": "merge_inventory",
+        "git_commit_sha": "fc559c25dac2fcb62563b71c6711acab9c1ffb60",
+        "node_visits": {
+          "start": 1,
+          "target_gate": 1,
+          "prepare": 1,
+          "inventory": 1
+        }
+      },
+      "diff": {
+        "summary": {
+          "files_changed": 0,
+          "additions": 0,
+          "deletions": 0
+        }
+      }
+    },
+    {
+      "seq": 0,
+      "checkpoint": {
+        "timestamp": "2026-07-31T18:05:32.446154177Z",
+        "current_node": "merge_inventory",
+        "completed_nodes": [
+          "start",
+          "prepare",
+          "target_gate",
+          "inventory",
+          "merge_inventory"
+        ],
+        "node_retries": {},
+        "context_values": {
+          "products_dir": "SECURITY-REVIEW-20260731-180332",
+          "thread.inventory.current_node": "merge_inventory",
           "internal.fidelity": "compact",
           "outcome": "succeeded",
           "internal.work_dir": "/home/daytona/workspace/sqlite3-ruby",
-          "command.output": "blob://sha256/03f0d6f1d92cb8102d7e8bdaba56ef6d5ce5e488fe6e1866578f27ae3abc5828",
+          "command.output": "blob://sha256/48154468b8ef045ff44b32cb28eb03bf4d0d54d06e8772fb304cd65491483ef8",
           "empty_target": false,
           "graph.default_fidelity": "compact",
           "use_inventory": true,
@@ -2572,9 +2935,13 @@
           "internal.retry_count.inventory": 0,
           "internal.retry_count.target_gate": 0,
           "graph.rankdir": "LR",
+          "inventory_done": true,
           "failure_class": "",
+          "inventory_correction": false,
+          "internal.retry_count.merge_inventory": 0,
           "graph.stall_timeout": "14400000ms",
           "thread.prepare.current_node": "target_gate",
+          "inventory_feedback": "",
           "graph.model_stylesheet": "\n            * { model: kimi-k3; reasoning_effort: low; }\n            .inventory { model: kimi-k3; reasoning_effort: low; }\n            .threat-model { model: kimi-k3; reasoning_effort: low; }\n            .research { model: kimi-k3; reasoning_effort: high; }\n            .verification { model: kimi-k3; reasoning_effort: high; }\n        ",
           "internal.retry_count.prepare": 0,
           "graph.goal": "Perform an adversarial, read-only security review of this repository and report only panel-verified findings.",
@@ -2603,7 +2970,7 @@
             "wholeTreeCompletenessRequired": true
           },
           "graph.default_max_retries": "0",
-          "current_node": "inventory",
+          "current_node": "merge_inventory",
           "last_stage": "inventory",
           "mode": "scan",
           "failure_signature": "",
@@ -2745,6 +3112,23 @@
             "status": "succeeded",
             "usage": null
           },
+          "merge_inventory": {
+            "status": "succeeded",
+            "context_updates": {
+              "command.output": "blob://sha256/48154468b8ef045ff44b32cb28eb03bf4d0d54d06e8772fb304cd65491483ef8",
+              "inventory_done": true,
+              "inventory_correction": false,
+              "inventory_feedback": ""
+            },
+            "notes": "Script completed: python3 .fabro/workflows/security-review/scripts/security_review.py merge inventory",
+            "usage": null,
+            "timing": {
+              "wall_time_ms": 0,
+              "inference_time_ms": 0,
+              "tool_time_ms": 1300,
+              "active_time_ms": 1300
+            }
+          },
           "target_gate": {
             "status": "succeeded",
             "notes": "Conditional node evaluated: target_gate",
@@ -2793,8 +3177,9 @@
             }
           }
         },
-        "next_node_id": "merge_inventory",
+        "next_node_id": "inventory_gate",
         "node_visits": {
+          "merge_inventory": 1,
           "start": 1,
           "target_gate": 1,
           "prepare": 1,
@@ -2881,6 +3266,46 @@
       "agent_control": "running",
       "state": "succeeded"
     },
+    "merge_inventory@1": {
+      "first_event_seq": 98,
+      "prompt": null,
+      "response": null,
+      "completion": null,
+      "provider_used": null,
+      "diff": null,
+      "script_invocation": {
+        "script": "python3 .fabro/workflows/security-review/scripts/security_review.py merge inventory",
+        "command": "exec 2>&1\npython3 .fabro/workflows/security-review/scripts/security_review.py merge inventory",
+        "language": "shell",
+        "timeout_ms": 180000
+      },
+      "script_timing": {
+        "output": "blob://sha256/48154468b8ef045ff44b32cb28eb03bf4d0d54d06e8772fb304cd65491483ef8",
+        "exit_code": 0,
+        "duration_ms": 1300,
+        "termination": "exited",
+        "output_bytes": 121,
+        "live_streaming": true
+      },
+      "parallel_results": null,
+      "output": null,
+      "output_bytes": 121,
+      "live_streaming": true,
+      "termination": "exited",
+      "started_at": "2026-07-31T18:05:30.812900840Z",
+      "handler": "command",
+      "graph_visit": 1,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "reasoning_tokens": 0,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0
+      },
+      "agent_control": "running",
+      "state": "running"
+    },
     "start@1": {
       "first_event_seq": 18,
       "prompt": null,
@@ -2957,7 +3382,12 @@
       "first_event_seq": 46,
       "prompt": null,
       "response": null,
-      "completion": null,
+      "completion": {
+        "outcome": "succeeded",
+        "notes": "Stage completed: inventory",
+        "failure_reason": null,
+        "timestamp": "2026-07-31T18:05:26.723017189Z"
+      },
       "provider_used": {
         "mode": "agent",
         "provider": "openrouter",
@@ -2972,8 +3402,12 @@
       "started_at": "2026-07-31T18:03:45.102831062Z",
       "handler": "agent",
       "graph_visit": 1,
-      "live_inference_ms": 97855,
-      "live_tool_ms": 2895,
+      "timing": {
+        "wall_time_ms": 101012,
+        "inference_time_ms": 97857,
+        "tool_time_ms": 2897,
+        "active_time_ms": 100754
+      },
       "usage": {
         "input_tokens": 13876,
         "output_tokens": 1214,
@@ -3142,7 +3576,7 @@
         "warnings": []
       },
       "agent_control": "running",
-      "state": "running"
+      "state": "succeeded"
     }
   }
 }
