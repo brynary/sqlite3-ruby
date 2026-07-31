@@ -20,6 +20,8 @@ enabled = false
 
 [run.model.fallbacks]
 "kimi-k3" = ["kimi:kimi-k3", "openrouter:kimi-k3", "claude-opus-5"]
+"claude-opus" = ["gpt-5.6-sol"]
+"claude-sonnet" = ["gpt-5.6-terra"]
 
 [run.environment]
 id = "security-review"
